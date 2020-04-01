@@ -5,9 +5,12 @@ import time
 import torch
 from torch.utils.data import Dataset, DataLoader
 import pickle
+import numpy as np
 
 data_folder_path = "data"
 
+# Here is a way to pad BERT: https://mccormickml.com/2019/07/22/BERT-fine-tuning/
+# But it seems to be a very primitive way to pad it.
 
 device = torch.device("cpu")
 
@@ -98,6 +101,62 @@ def construct_retrieval_dataset_openbook():
 
     return train_list, dev_list, test_list, sci_kb
 
+def pad_tensor(vec, pad):
+    """
+    args:
+        vec - tensor to pad
+        pad - the size to pad to
+        dim - dimension to pad
+
+    return:
+        a new tensor padded to 'pad' in dimension 'dim'
+    """
+
+    seq_len, embd_dim = vec.size()
+    print(pad, seq_len, embd_dim)
+
+    return torch.cat([vec, torch.zeros(pad-seq_len, embd_dim, dtype = torch.float32)], dim=0)
+
+
+class PadCollate:
+    """
+    a variant of callate_fn that pads according to the longest sequence in
+    a batch of sequences
+    """
+
+    def __init__(self):
+        """
+        args:
+            dim - the dimension to be padded (dimension of time in sequences)
+        """
+
+    def pad_collate(self, batch):
+        """
+        args:
+            batch - list of (tensor, label)
+
+        reutrn:
+            xs - a tensor of all examples in 'batch' after padding
+            ys - a LongTensor of all labels in batch
+        """
+
+        # The input here is actually a list of dictionary.
+        # find longest sequence
+        max_len = max([sample["embds"].size()[0] for sample in batch]) # this should be equivalent to "for x in batch"
+        # pad according to max_len
+        for sample in batch:
+            sample["embds"]  = pad_tensor(sample["embds"], pad=max_len)
+        # stack all
+
+        # the output of this function needs to be a already batched function.
+        batch_returned = {}
+        batch_returned["ids"] = [sample["id"] for sample in batch]
+        batch_returned["embds"] = torch.stack([sample["embds"] for sample in batch])
+        return batch_returned
+
+    def __call__(self, batch):
+        return self.pad_collate(batch)
+
 def get_list_dict_time():
     train_list, dev_list, test_list, kb = construct_retrieval_dataset_openbook()
 
@@ -133,8 +192,9 @@ def dataloader_test():
             return len(self.all_instances)
 
         def __getitem__(self, idx):
+            print("\tthis function is called every time I try to access the element")
             self.all_instances[idx]["tokens"] = self.all_instances[idx]["text"].split(" ")
-            self.all_instances[idx]["embds"] = torch.tensor([glove_dict[token] for token in self.all_instances[idx]["tokens"] if token in glove_dict]).to(device)
+            self.all_instances[idx]["embds"] = torch.tensor([glove_dict[token] if token in glove_dict else np.zeros(300) for token in self.all_instances[idx]["tokens"]], dtype = torch.float32)
 
             return self.all_instances[idx]
 
@@ -149,13 +209,15 @@ def dataloader_test():
     openbook_dataset = OpenbookDataset( train_list, dev_list, test_list)
     print("dataset built!")
     openbook_dataloader = DataLoader(openbook_dataset, batch_size=4,
-                        shuffle=True, num_workers=1)
+                        shuffle=True, num_workers=1, collate_fn=PadCollate())
     print("dataloader built!")
 
     # question: what does this num_workers mean
     for i_batch, sample_batched in enumerate(openbook_dataloader):
         print("enter each batch")
-        print_batch(sample_batched["embds"])
+        print("="*20)
+        print(sample_batched["embds"].size())
+        input("AAA")
 
     return 0
 
@@ -167,4 +229,55 @@ main()
 
 # glove path: /Users/zhengzhongliang/NLP_Research/Glove_Embedding/glove.840B.300d.pickle
 
+# the original customized padding function:
+'''
+def pad_tensor(vec, pad, dim):
+    """
+    args:
+        vec - tensor to pad
+        pad - the size to pad to
+        dim - dimension to pad
 
+    return:
+        a new tensor padded to 'pad' in dimension 'dim'
+    """
+    pad_size = list(vec.shape)
+    pad_size[dim] = pad - vec.size(dim)
+    return torch.cat([vec, torch.zeros(*pad_size)], dim=dim)
+
+
+class PadCollate:
+    """
+    a variant of callate_fn that pads according to the longest sequence in
+    a batch of sequences
+    """
+
+    def __init__(self, dim=0):
+        """
+        args:
+            dim - the dimension to be padded (dimension of time in sequences)
+        """
+        self.dim = dim
+
+    def pad_collate(self, batch):
+        """
+        args:
+            batch - list of (tensor, label)
+
+        reutrn:
+            xs - a tensor of all examples in 'batch' after padding
+            ys - a LongTensor of all labels in batch
+        """
+        # find longest sequence
+        max_len = max(map(lambda x: x[0].shape[self.dim], batch))
+        # pad according to max_len
+        batch = map(lambda (x, y):
+                    (pad_tensor(x, pad=max_len, dim=self.dim), y), batch)
+        # stack all
+        xs = torch.stack(map(lambda x: x[0], batch), dim=0)
+        ys = torch.LongTensor(map(lambda x: x[1], batch))
+        return xs, ys
+
+    def __call__(self, batch):
+        return self.pad_collate(batch)
+'''
