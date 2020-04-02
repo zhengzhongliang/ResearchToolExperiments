@@ -234,7 +234,8 @@ def forward_pass_epoch_naive(instances, batch_size=1):
     print("="*20)
     print("\tuse naive data loading batch size ", batch_size)
     n_batch = int(len(instances)/batch_size)
-    lstm = torch.nn.LSTM(input_size = 300, hidden_size= 200, num_layers=2, batch_first= True).to(device)
+    lstm = torch.nn.LSTM(input_size = 300, hidden_size= 200, num_layers=2, batch_first= True)
+    lstm.to(device)
 
     lstm.eval()
 
@@ -282,7 +283,8 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size = 
     openbook_dataloader = DataLoader(openbook_dataset, batch_size=batch_size,
                                      shuffle=True, num_workers=1, collate_fn=PadCollate())
 
-    lstm = torch.nn.LSTM(input_size=300, hidden_size=200, num_layers=2, batch_first=True).to(device)
+    lstm = torch.nn.LSTM(input_size=300, hidden_size=200, num_layers=2, batch_first=True)
+    lstm.to(device)
 
     lstm.eval()
 
