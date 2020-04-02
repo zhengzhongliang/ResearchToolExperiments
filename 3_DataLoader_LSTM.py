@@ -6,6 +6,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 import pickle
 import numpy as np
+import random
 
 data_folder_path = "data"
 
@@ -113,9 +114,8 @@ def pad_tensor(vec, pad):
     """
 
     seq_len, embd_dim = vec.size()
-    print(pad, seq_len, embd_dim)
 
-    return torch.cat([vec, torch.zeros(pad-seq_len, embd_dim, dtype = torch.float32)], dim=0)
+    return torch.cat([vec, torch.zeros(pad-seq_len, embd_dim, dtype = torch.float32)], dim=0).to(device)
 
 
 class PadCollate:
@@ -174,7 +174,6 @@ class OpenbookDataset(Dataset):
         return len(self.all_instances)
 
     def __getitem__(self, idx):
-        print("\tthis function is called every time I try to access the element")
         self.all_instances[idx]["tokens"] = self.all_instances[idx]["text"].split(" ")
         self.all_instances[idx]["embds"] = torch.tensor([glove_dict[token] if token in glove_dict else np.zeros(300) for token in self.all_instances[idx]["tokens"]], dtype = torch.float32)
 
@@ -221,28 +220,58 @@ def dataloader_test():
 
     return 0
 
-def forward_pass_epoch_naive(instances):
+def forward_pass_epoch_naive(instances, batch_size=1):
+    assert(batch_size>0)
+    pad_module = PadCollate()
+    random.shuffle(instances)
+
+    print("="*20)
+    print("\tuse naive data loading batch size ", batch_size)
+    n_batch = int(len(instances)/batch_size)
     lstm = torch.nn.LSTM(input_size = 300, hidden_size= 200, num_layers=2, batch_first= True).to(device)
 
     lstm.eval()
 
-    start_time = time.time()
-    with torch.no_grad():
-        for instance in instances:
-            tokens = instance["text"].split(" ")
-            embds = torch.tensor([[glove_dict[token] if token in glove_dict else np.zeros(300) for token in tokens]], dtype = torch.float32).to(device)
-            outputs = lstm(embds)
+    if batch_size==1:
+        start_time = time.time()
 
-    end_time = time.time()
-    print("="*20)
-    print("use naive data loading method")
-    print("number of sample:", len(instances))
-    print("epoch time:", end_time-start_time)
+        with torch.no_grad():
+            for instance in instances:
+                tokens = instance["text"].split(" ")
+                embds = torch.tensor([[glove_dict[token] if token in glove_dict else np.zeros(300) for token in tokens]], dtype = torch.float32).to(device)
+                outputs = lstm(embds)
+
+        end_time = time.time()
+        print("\tnumber of sample:", len(instances))
+        print("\tepoch time:", end_time - start_time)
+
+        return end_time - start_time
+    else:
 
 
-    return 0
+        start_time = time.time()
+
+        with torch.no_grad():
+            for batch_id in range(n_batch):
+                for instance in instances[batch_id*batch_size:(batch_id+1)*batch_size]:
+                    tokens = instance["text"].split(" ")
+                    instance["embds"] = torch.tensor(
+                        [glove_dict[token] if token in glove_dict else np.zeros(300) for token in tokens],
+                        dtype=torch.float32)
+
+                embds = pad_module(instances[batch_id*batch_size:(batch_id+1)*batch_size])["embds"].to(device)
+                outputs = lstm(embds)
+
+        end_time = time.time()
+        print("\tnumber of sample:", len(instances))
+        print("\tepoch time:", end_time - start_time)
+
+        return end_time - start_time
 
 def forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size = 4):
+    print("=" * 20)
+    print("\tuse dataloader batch size ", batch_size)
+
     openbook_dataset = OpenbookDataset(train_list, dev_list, test_list)
     openbook_dataloader = DataLoader(openbook_dataset, batch_size=batch_size,
                                      shuffle=True, num_workers=1, collate_fn=PadCollate())
@@ -254,23 +283,35 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size = 
     start_time = time.time()
     with torch.no_grad():
         for batch_id, batch in enumerate(openbook_dataloader):
-            outputs = lstm(batch["embds"].to(device))
+            outputs = lstm(batch["embds"])
 
     end_time = time.time()
-    print("=" * 20)
-    print("use dataloader batch size ", batch_size)
-    print("number of sample:", batch_id*batch_size)
-    print("epoch time:", end_time - start_time)
 
-    return 0
+    print("\tnumber of sample:", batch_id*batch_size)
+    print("\tepoch time:", end_time - start_time)
+
+    return end_time-start_time
 
 def runtime_comparison():
     train_list, dev_list, test_list, kb = construct_retrieval_dataset_openbook()
 
-    forward_pass_epoch_naive(train_list+dev_list+test_list)
-    forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=1)
-    forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=2)
-    forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=4)
+    time_dict = {"nl_bs_1":[], "nl_bs_2":[], "nl_bs_4":[], "nl_bs_8":[], "dl_bs_1":[], "dl_bs_2":[], "dl_bs_4":[], "dl_bs_8":[]}
+    for seed in range(5):
+        time_dict["nl_bs_1"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=1))
+        time_dict["nl_bs_2"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=2))
+        time_dict["nl_bs_4"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=4))
+        time_dict["nl_bs_8"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=8))
+
+        time_dict["dl_bs_1"].append(forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=1))
+        time_dict["dl_bs_2"].append(forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=2))
+        time_dict["dl_bs_4"].append(forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=4))
+        time_dict["dl_bs_8"].append(forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=8))
+
+    time_dict_avg = {}
+    for key in time_dict.keys():
+        time_dict_avg[key] = (np.mean(np.array(time_dict[key])), np.std(np.array(time_dict[key])))
+
+    print(time_dict_avg)
 
 
 
