@@ -157,6 +157,29 @@ class PadCollate:
     def __call__(self, batch):
         return self.pad_collate(batch)
 
+class OpenbookDataset(Dataset):
+    """Face Landmarks dataset."""
+
+    def __init__(self, train_list, dev_list, test_list):
+        """
+        Args:
+            csv_file (string): Path to the csv file with annotations.
+            root_dir (string): Directory with all the images.
+            transform (callable, optional): Optional transform to be applied
+                on a sample.
+        """
+        self.all_instances = train_list+dev_list+test_list
+
+    def __len__(self):
+        return len(self.all_instances)
+
+    def __getitem__(self, idx):
+        print("\tthis function is called every time I try to access the element")
+        self.all_instances[idx]["tokens"] = self.all_instances[idx]["text"].split(" ")
+        self.all_instances[idx]["embds"] = torch.tensor([glove_dict[token] if token in glove_dict else np.zeros(300) for token in self.all_instances[idx]["tokens"]], dtype = torch.float32)
+
+        return self.all_instances[idx]
+
 def get_list_dict_time():
     train_list, dev_list, test_list, kb = construct_retrieval_dataset_openbook()
 
@@ -174,29 +197,6 @@ def get_list_dict_time():
 
 def dataloader_test():
     train_list, dev_list, test_list, kb = construct_retrieval_dataset_openbook()
-
-    class OpenbookDataset(Dataset):
-        """Face Landmarks dataset."""
-
-        def __init__(self, train_list, dev_list, test_list):
-            """
-            Args:
-                csv_file (string): Path to the csv file with annotations.
-                root_dir (string): Directory with all the images.
-                transform (callable, optional): Optional transform to be applied
-                    on a sample.
-            """
-            self.all_instances = train_list+dev_list+test_list
-
-        def __len__(self):
-            return len(self.all_instances)
-
-        def __getitem__(self, idx):
-            print("\tthis function is called every time I try to access the element")
-            self.all_instances[idx]["tokens"] = self.all_instances[idx]["text"].split(" ")
-            self.all_instances[idx]["embds"] = torch.tensor([glove_dict[token] if token in glove_dict else np.zeros(300) for token in self.all_instances[idx]["tokens"]], dtype = torch.float32)
-
-            return self.all_instances[idx]
 
     def print_batch(sample_batched):
         print("="*20)
@@ -221,9 +221,62 @@ def dataloader_test():
 
     return 0
 
+def forward_pass_epoch_naive(instances):
+    lstm = torch.nn.LSTM(input_size = 300, hidden_size= 200, num_layers=2, batch_first= True).to(device)
+
+    lstm.eval()
+
+    start_time = time.time()
+    with torch.no_grad():
+        for instance in instances:
+            tokens = instance["text"].split(" ")
+            embds = torch.tensor([[glove_dict[token] if token in glove_dict else np.zeros(300) for token in tokens]], dtype = torch.float32).to(device)
+            outputs = lstm(embds)
+
+    end_time = time.time()
+    print("="*20)
+    print("use naive data loading method")
+    print("number of sample:", len(instances))
+    print("epoch time:", end_time-start_time)
+
+
+    return 0
+
+def forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size = 4):
+    openbook_dataset = OpenbookDataset(train_list, dev_list, test_list)
+    openbook_dataloader = DataLoader(openbook_dataset, batch_size=batch_size,
+                                     shuffle=True, num_workers=1, collate_fn=PadCollate())
+
+    lstm = torch.nn.LSTM(input_size=300, hidden_size=200, num_layers=2, batch_first=True).to(device)
+
+    lstm.eval()
+
+    start_time = time.time()
+    with torch.no_grad():
+        for batch_id, batch in enumerate(openbook_dataloader):
+            outputs = lstm(batch["embds"].to(device))
+
+    end_time = time.time()
+    print("=" * 20)
+    print("use dataloader batch size ", batch_size)
+    print("number of sample:", batch_id*batch_size)
+    print("epoch time:", end_time - start_time)
+
+    return 0
+
+def runtime_comparison():
+    train_list, dev_list, test_list, kb = construct_retrieval_dataset_openbook()
+
+    forward_pass_epoch_naive(train_list+dev_list+test_list)
+    forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=1)
+    forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=2)
+    forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=4)
+
+
 
 def main():
-    dataloader_test()
+    #dataloader_test()
+    runtime_comparison()
 
 main()
 
