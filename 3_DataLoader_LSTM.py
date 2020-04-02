@@ -121,7 +121,7 @@ def pad_tensor(vec, pad):
 
     seq_len, embd_dim = vec.size()
 
-    return torch.cat([vec, torch.zeros(pad-seq_len, embd_dim, dtype = torch.float32)], dim=0).to(device)
+    return torch.cat([vec, torch.zeros(pad-seq_len, embd_dim, dtype = torch.float32)], dim=0)
 
 
 class PadCollate:
@@ -254,8 +254,6 @@ def forward_pass_epoch_naive(instances, batch_size=1):
 
         return end_time - start_time
     else:
-
-
         start_time = time.time()
 
         with torch.no_grad():
@@ -291,7 +289,7 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size = 
     start_time = time.time()
     with torch.no_grad():
         for batch_id, batch in enumerate(openbook_dataloader):
-            outputs = lstm(batch["embds"])
+            outputs = lstm(batch["embds"].to(device))
 
     end_time = time.time()
 
