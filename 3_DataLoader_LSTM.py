@@ -7,6 +7,7 @@ from torch.utils.data import Dataset, DataLoader
 import pickle
 import numpy as np
 import random
+import os
 
 data_folder_path = "data"
 
@@ -15,9 +16,13 @@ data_folder_path = "data"
 
 device = torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu")
 
+if os.path.exists("/Users/zhengzhongliang/NLP_Research/Glove_Embedding/glove.840B.300d.pickle"):
+    with open("/Users/zhengzhongliang/NLP_Research/Glove_Embedding/glove.840B.300d.pickle", "rb") as handle:
+        glove_dict = pickle.load(handle)
+else:
+    with open("/home/zhengzhongliang/CLU_Projects/glove.840B.300d.pickle", "rb") as handle:
+        glove_dict = pickle.load(handle)
 
-with open("/Users/zhengzhongliang/NLP_Research/Glove_Embedding/glove.840B.300d.pickle", "rb") as handle:
-    glove_dict = pickle.load(handle)
 
 
 def random_negative_from_kb(target_fact_num_list, kb_as_list, num_of_negative_facts):
