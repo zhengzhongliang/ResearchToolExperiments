@@ -13,7 +13,8 @@ data_folder_path = "data"
 # Here is a way to pad BERT: https://mccormickml.com/2019/07/22/BERT-fine-tuning/
 # But it seems to be a very primitive way to pad it.
 
-device = torch.device("cpu")
+device = torch.device("gpu:0") if torch.cuda.is_available() else torch.device("cpu")
+
 
 with open("/Users/zhengzhongliang/NLP_Research/Glove_Embedding/glove.840B.300d.pickle", "rb") as handle:
     glove_dict = pickle.load(handle)
