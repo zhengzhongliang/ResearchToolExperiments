@@ -279,7 +279,7 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size = 
 
     openbook_dataset = OpenbookDataset(train_list, dev_list, test_list)
     openbook_dataloader = DataLoader(openbook_dataset, batch_size=batch_size,
-                                     shuffle=True, num_workers=1, collate_fn=PadCollate())
+                                     shuffle=True, num_workers=2, collate_fn=PadCollate())
 
     lstm = torch.nn.LSTM(input_size=300, hidden_size=200, num_layers=2, batch_first=True)
     lstm.to(device)
@@ -303,10 +303,10 @@ def runtime_comparison():
 
     time_dict = {"nl_bs_1":[], "nl_bs_2":[], "nl_bs_4":[], "nl_bs_8":[], "dl_bs_1":[], "dl_bs_2":[], "dl_bs_4":[], "dl_bs_8":[]}
     for seed in range(5):
-        time_dict["nl_bs_1"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=1))
-        time_dict["nl_bs_2"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=2))
-        time_dict["nl_bs_4"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=4))
-        time_dict["nl_bs_8"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=8))
+        # time_dict["nl_bs_1"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=1))
+        # time_dict["nl_bs_2"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=2))
+        # time_dict["nl_bs_4"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=4))
+        # time_dict["nl_bs_8"].append(forward_pass_epoch_naive(train_list+dev_list+test_list, batch_size=8))
 
         time_dict["dl_bs_1"].append(forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=1))
         time_dict["dl_bs_2"].append(forward_pass_epoch_dataloader(train_list, dev_list, test_list, batch_size=2))
