@@ -18,14 +18,14 @@ data_folder_path = "data"
 
 device = torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu")
 
-if os.path.exists("/Users/zhengzhongliang/NLP_Research/Glove_Embedding/glove.840B.300d.pickle"):
-    with open("/Users/zhengzhongliang/NLP_Research/Glove_Embedding/glove.840B.300d.pickle", "rb") as handle:
-        glove_dict = pickle.load(handle)
-else:
-    with open("/home/zhengzhongliang/CLU_Projects/glove.840B.300d.pickle", "rb") as handle:
-        glove_dict = pickle.load(handle)
-
-
+# if os.path.exists("/Users/zhengzhongliang/NLP_Research/Glove_Embedding/glove.840B.300d.pickle"):
+#     with open("/Users/zhengzhongliang/NLP_Research/Glove_Embedding/glove.840B.300d.pickle", "rb") as handle:
+#         glove_dict = pickle.load(handle)
+# else:
+#     with open("/home/zhengzhongliang/CLU_Projects/glove.840B.300d.pickle", "rb") as handle:
+#         glove_dict = pickle.load(handle)
+#
+#
 
 def random_negative_from_kb(target_fact_num_list, kb_as_list, num_of_negative_facts):
     candidate_indexes = list(range(len(kb_as_list)))
@@ -121,9 +121,7 @@ def pad_tensor(vec, pad):
         a new tensor padded to 'pad' in dimension 'dim'
     """
 
-    seq_len, embd_dim = vec.size()
-
-    return torch.cat([vec, torch.zeros(pad-seq_len, embd_dim, dtype = torch.float32)], dim=0)
+    return vec + [0]*(pad-len(vec))
 
 
 class PadCollate:
@@ -150,16 +148,16 @@ class PadCollate:
 
         # The input here is actually a list of dictionary.
         # find longest sequence
-        max_len = max([sample["embds"].size()[0] for sample in batch]) # this should be equivalent to "for x in batch"
+        max_len = max([len(sample["token_ids"]) for sample in batch]) # this should be equivalent to "for x in batch"
         # pad according to max_len
         for sample in batch:
-            sample["embds"]  = pad_tensor(sample["embds"], pad=max_len)
+            sample["token_ids"]  = pad_tensor(sample["token_ids"], pad=max_len)
         # stack all
 
         # the output of this function needs to be a already batched function.
         batch_returned = {}
-        batch_returned["ids"] = [sample["id"] for sample in batch]
-        batch_returned["embds"] = torch.stack([sample["embds"] for sample in batch])
+        batch_returned["token_ids"] = torch.tensor([[101]+sample["token_id"]+[102] for sample in batch])
+        batch_returned["seg_ids"] = torch.tensor([[0]*(max_len+2) for sample in batch])
         return batch_returned
 
     def __call__(self, batch):
@@ -178,10 +176,10 @@ class OpenbookDataset(Dataset):
         """
         self.all_instances = []
         for sci_fact in kb:
-            # cls_id = 0; sep_id = 1; pad_id =
+            # cls_id = 101; sep_id = 102; pad_id = 0;
             tokens = tokenizer.tokenize(sci_fact[1:-1])   # this is for strip quotes
             token_ids = tokenizer.convert_tokens_to_ids(tokens)   # this does not include pad, cls or sep
-            self.all_instances.append({"token_ids":token_ids, "seg_ids":[0]*len(token_ids)})
+            self.all_instances.append({"token_ids":token_ids, "seg_ids":[0]*len(token_ids)})  # list of ids, list of ids.
 
     def __len__(self):
         return len(self.all_instances)
@@ -237,11 +235,11 @@ def forward_pass_epoch_dataloader(kb, tokenizer, batch_size = 4):
 
 
     openbook_dataset = OpenbookDataset(kb, tokenizer)
-    # openbook_dataloader = DataLoader(openbook_dataset, batch_size=batch_size,
-    #                                 shuffle=True, num_workers=2, collate_fn=PadCollate())
+    openbook_dataloader = DataLoader(openbook_dataset, batch_size=batch_size,
+                                    shuffle=False, num_workers=2, collate_fn=PadCollate())
 
-    for sent in openbook_dataset:
-        print(sent)
+    for batch in openbook_dataloader:
+        print(batch)
         input("A")
     # start_time = time.time()
     # with torch.no_grad():
