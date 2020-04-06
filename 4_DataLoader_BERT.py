@@ -229,29 +229,45 @@ def dataloader_test():
 
     return 0
 
-def forward_pass_epoch_dataloader(kb, tokenizer, batch_size = 4):
+def forward_pass_epoch_naive(kb, tokenizer, bert_model):
+    print("=" * 20)
+    print("\tuse naive loading")
+
+    openbook_dataset = OpenbookDataset(kb, tokenizer)
+    all_instances = openbook_dataset.all_instances
+
+    bert_model.eval()
+
+    start_time = time.time()
+    with torch.no_grad():
+        for instance in all_instances:
+            token_ids = torch.tensor([[101]+instance["token_ids"]+[102]]).to(device)
+            seg_ids = torch.tensor([[0]+instance["seg_ids"]+[0]]).to(device)
+            _ = bert_model(token_ids, seg_ids)
+
+    end_time = time.time()
+    return end_time-start_time
+
+
+def forward_pass_epoch_dataloader(kb, tokenizer, bert_model, batch_size = 4):
     print("=" * 20)
     print("\tuse dataloader batch size ", batch_size)
 
 
     openbook_dataset = OpenbookDataset(kb, tokenizer)
     openbook_dataloader = DataLoader(openbook_dataset, batch_size=batch_size,
-                                    shuffle=False, num_workers=2, collate_fn=PadCollate())
+                                    shuffle=False, num_workers=3, collate_fn=PadCollate())
 
-    for batch in openbook_dataloader:
-        print(batch)
-        input("A")
-    # start_time = time.time()
-    # with torch.no_grad():
-    #     for batch_id, batch in enumerate(openbook_dataloader):
-    #         print("A")
-    #
-    # end_time = time.time()
-    #
-    # print("\tnumber of sample:", batch_id*batch_size)
-    # print("\tepoch time:", end_time - start_time)
-    #
-    # return end_time-start_time
+    bert_model.eval()
+
+    start_time = time.time()
+    with torch.no_grad():
+        for batch in openbook_dataloader:
+
+            _ = bert_model(batch["token_ids"].to(device), batch["seg_ids"].to(device))
+
+    end_time = time.time()
+    return end_time - start_time
 
 
 def main():
@@ -259,7 +275,11 @@ def main():
     bert_model = BertModel.from_pretrained('bert-base-uncased')
 
     train_list, dev_list, test_list, kb = construct_retrieval_dataset_openbook()
-    forward_pass_epoch_dataloader(kb, tokenizer, batch_size=2)
+    time_naive = forward_pass_epoch_naive(kb, tokenizer, bert_model)
+    print("time naive:", time_naive)
+    time_loader = forward_pass_epoch_dataloader(kb, tokenizer, bert_model, batch_size=8)
+    print("time loader:", time_loader)
+
 
 main()
 
