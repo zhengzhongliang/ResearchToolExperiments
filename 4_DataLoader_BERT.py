@@ -259,7 +259,7 @@ def main():
     bert_model = BertModel.from_pretrained('bert-base-uncased')
 
     train_list, dev_list, test_list, kb = construct_retrieval_dataset_openbook()
-    forward_pass_epoch_dataloader(kb, tokenizer, batch_size=1)
+    forward_pass_epoch_dataloader(kb, tokenizer, batch_size=2)
 
 main()
 
