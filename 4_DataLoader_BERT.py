@@ -156,7 +156,7 @@ class PadCollate:
 
         # the output of this function needs to be a already batched function.
         batch_returned = {}
-        batch_returned["token_ids"] = torch.tensor([[101]+sample["token_id"]+[102] for sample in batch])
+        batch_returned["token_ids"] = torch.tensor([[101]+sample["token_ids"]+[102] for sample in batch])
         batch_returned["seg_ids"] = torch.tensor([[0]*(max_len+2) for sample in batch])
         return batch_returned
 
