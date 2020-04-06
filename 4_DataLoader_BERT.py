@@ -273,6 +273,7 @@ def forward_pass_epoch_dataloader(kb, tokenizer, bert_model, batch_size = 4):
 def main():
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     bert_model = BertModel.from_pretrained('bert-base-uncased')
+    bert_model.to(device)
 
     train_list, dev_list, test_list, kb = construct_retrieval_dataset_openbook()
     time_naive = forward_pass_epoch_naive(kb, tokenizer, bert_model)
