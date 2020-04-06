@@ -237,6 +237,7 @@ def forward_pass_epoch_naive(kb, tokenizer, bert_model):
     all_instances = openbook_dataset.all_instances
 
     bert_model.eval()
+    save_array  = []
 
     start_time = time.time()
     with torch.no_grad():
@@ -244,9 +245,14 @@ def forward_pass_epoch_naive(kb, tokenizer, bert_model):
             token_ids = torch.tensor([[101]+instance["token_ids"]+[102]]).to(device)
             seg_ids = torch.tensor([[0]+instance["seg_ids"]+[0]]).to(device)
             output_tensor, _ = bert_model(token_ids, seg_ids)
-            output_tensor[-1][:, 0].detach().cpu().numpy()
+            final_tensor = output_tensor[-1][:, 0].detach().cpu().numpy()
 
+            save_array.append(final_tensor)
+
+    save_array = np.array(save_array)
+    print("\tarray size:", save_array.shape)
     end_time = time.time()
+    np.save("test_arr", save_array)
     return end_time-start_time
 
 
