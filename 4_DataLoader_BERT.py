@@ -243,7 +243,8 @@ def forward_pass_epoch_naive(kb, tokenizer, bert_model):
         for instance in all_instances:
             token_ids = torch.tensor([[101]+instance["token_ids"]+[102]]).to(device)
             seg_ids = torch.tensor([[0]+instance["seg_ids"]+[0]]).to(device)
-            _ = bert_model(token_ids, seg_ids)
+            output_tensor, _ = bert_model(token_ids, seg_ids)
+            output_tensor[-1][:, 0].detach().cpu().numpy()
 
     end_time = time.time()
     return end_time-start_time
@@ -263,8 +264,8 @@ def forward_pass_epoch_dataloader(kb, tokenizer, bert_model, batch_size = 4):
     start_time = time.time()
     with torch.no_grad():
         for batch in openbook_dataloader:
-
-            _ = bert_model(batch["token_ids"].to(device), batch["seg_ids"].to(device))
+            output_tensor, _ = bert_model(batch["token_ids"].to(device), batch["seg_ids"].to(device))
+            output_tensor[-1][:,0].detach().cpu().numpy()
 
     end_time = time.time()
     return end_time - start_time
