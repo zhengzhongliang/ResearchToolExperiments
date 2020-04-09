@@ -192,6 +192,8 @@ class PadCollate:
         batch_returned["fact_token_ids"] = torch.tensor([[101]+fact_ids+[102] for fact_ids in all_facts_ids])
         batch_returned["fact_seg_ids"] = torch.tensor([[0]*(max_len_fact+2) for fact_ids in all_facts_ids])
 
+        batch_returned["label_in_distractor"] = torch.tensor([sample["label_in_distractor"] for sample in batch])
+
         return batch_returned
 
     def __call__(self, batch):
