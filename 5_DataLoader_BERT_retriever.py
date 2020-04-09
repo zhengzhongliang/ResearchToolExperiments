@@ -180,7 +180,7 @@ class PadCollate:
 
         all_facts_ids = []
         for sample in batch:
-            all_facts_ids.extend([sample["fact_token_ids"] for sample in batch])
+            all_facts_ids.extend(sample["fact_token_ids"])
 
         max_len_fact = max([len(fact_token_ids) for fact_token_ids in all_facts_ids])
 
