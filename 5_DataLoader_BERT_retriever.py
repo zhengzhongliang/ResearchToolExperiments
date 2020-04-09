@@ -121,20 +121,10 @@ class BertRetriever(torch.nn.Module):
         query_output_tensor_, _ = self.bert_q(query_token_ids, query_seg_ids)
         fact_output_tensor_, _ = self.bert_d(fact_token_ids, fact_seg_ids)
 
-        print("="*20)
-        print(query_token_ids.size())
-        print(query_seg_ids.size())
-        print(fact_token_ids.size())
-        print(fact_seg_ids.size())
-
-
         batch_size = query_token_ids.size()[0]
 
         query_output_tensor = query_output_tensor_[-1][:, 0].view(batch_size, 768, 1)
         fact_output_tensor = fact_output_tensor_[-1][:, 0].view(batch_size, 5, 768)
-
-        print(query_output_tensor.size())
-        print(fact_output_tensor.size())
 
         return query_output_tensor, fact_output_tensor
 
@@ -309,6 +299,7 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
 
     start_time = time.time()
 
+    total_loss = 0
     for i, batch in enumerate(train_dataloader):
         optimizer.zero_grad()
 
@@ -322,10 +313,18 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
         loss.backward()
         optimizer.step()
 
+        total_loss+=loss.detach().cpu().numpy()
+
+        if (i+1)%200==0:
+            print("processing sample ", i, " average loss:", total_loss/i)
+
     end_time = time.time()
+
+    print("total training time:", end_time-start_time)
 
 
     bert_model.eval()
+    total_loss = 0
     with torch.no_grad():
         for i, batch in enumerate(dev_dataloader):
             query_output_tensor, fact_output_tensor = bert_model(batch["query_token_ids"].to(device),
@@ -338,6 +337,10 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
 
             label = torch.tensor(batch["label_in_distractor"]).to(device)
             loss = criterion(scores, label)
+
+            total_loss += loss.detach().cpu().numpy()
+
+        print("total eval loss:", total_loss)
 
     return end_time - start_time
 
