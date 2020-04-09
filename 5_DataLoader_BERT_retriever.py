@@ -312,7 +312,7 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
     for i, batch in enumerate(train_dataloader):
         optimizer.zero_grad()
 
-        fact_output_tensor, query_output_tensor = bert_model(batch["query_token_ids"].to(device), batch["query_seg_ids"].to(device), batch["fact_token_ids"].to(device), batch["fact_seg_ids"].to(device))
+        query_output_tensor, fact_output_tensor = bert_model(batch["query_token_ids"].to(device), batch["query_seg_ids"].to(device), batch["fact_token_ids"].to(device), batch["fact_seg_ids"].to(device))
 
         scores = torch.matmul(fact_output_tensor, query_output_tensor).squeeze()
 
@@ -328,7 +328,7 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
     bert_model.eval()
     with torch.no_grad():
         for i, batch in enumerate(dev_dataloader):
-            fact_output_tensor, query_output_tensor = bert_model(batch["query_token_ids"].to(device),
+            query_output_tensor, fact_output_tensor = bert_model(batch["query_token_ids"].to(device),
                                                                  batch["query_seg_ids"].to(device),
                                                                  batch["fact_token_ids"].to(device),
                                                                  batch["fact_seg_ids"].to(device))
