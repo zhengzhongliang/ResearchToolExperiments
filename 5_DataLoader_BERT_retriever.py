@@ -121,10 +121,20 @@ class BertRetriever(torch.nn.Module):
         query_output_tensor_, _ = self.bert_q(query_token_ids, query_seg_ids)
         fact_output_tensor_, _ = self.bert_d(fact_token_ids, fact_seg_ids)
 
+        print("="*20)
+        print(query_token_ids.size())
+        print(query_seg_ids.size())
+        print(fact_token_ids.size())
+        print(fact_seg_ids.size())
+
+
         batch_size = query_token_ids.size()[0]
 
         query_output_tensor = query_output_tensor_[-1][:, 0].view(batch_size, 768, 1)
         fact_output_tensor = fact_output_tensor_[-1][:, 0].view(batch_size, 5, 768)
+
+        print(query_output_tensor.size())
+        print(fact_output_tensor.size())
 
         return query_output_tensor, fact_output_tensor
 
