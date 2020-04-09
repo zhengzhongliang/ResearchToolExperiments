@@ -286,13 +286,13 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
     print("\tuse dataloader batch size ", batch_size)
 
 
-    train_data = OpenbookDataset(train_list, kb, tokenizer)
+    train_data = OpenbookDataset(train_list[:11], kb, tokenizer)
     train_dataloader = DataLoader(train_data, batch_size=batch_size,
-                                    shuffle=True, num_workers=3, collate_fn=PadCollate(), drop_last=True)
+                                    shuffle=True, num_workers=3, collate_fn=PadCollate())
 
-    dev_data = OpenbookDataset(dev_list, kb, tokenizer)
+    dev_data = OpenbookDataset(dev_list[:11], kb, tokenizer)
     dev_dataloader = DataLoader(dev_data, batch_size=batch_size,
-                                  shuffle=False, num_workers=3, collate_fn=PadCollate(), drop_last=True)
+                                  shuffle=False, num_workers=3, collate_fn=PadCollate())
 
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = optim.Adam(bert_model.parameters(), lr=0.00001)
@@ -307,7 +307,7 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
 
         query_output_tensor, fact_output_tensor = bert_model(batch["query_token_ids"].to(device), batch["query_seg_ids"].to(device), batch["fact_token_ids"].to(device), batch["fact_seg_ids"].to(device))
 
-        scores = torch.matmul(fact_output_tensor, query_output_tensor).squeeze()
+        scores = torch.matmul(fact_output_tensor, query_output_tensor).squeeze(dim=2)
 
         label = batch["label_in_distractor"].to(device)
 
@@ -337,7 +337,7 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
                                                                  batch["fact_seg_ids"].to(device))
 
 
-            scores = torch.matmul(fact_output_tensor, query_output_tensor).squeeze()   # size of scores: [2,5]
+            scores = torch.matmul(fact_output_tensor, query_output_tensor).squeeze(dim=2)   # size of scores: [2,5]
 
             label =batch["label_in_distractor"].to(device)    # size of labels: [2]
             loss = criterion(scores, label)
