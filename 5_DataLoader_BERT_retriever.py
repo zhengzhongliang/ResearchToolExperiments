@@ -229,7 +229,7 @@ class OpenbookDataset(Dataset):
             instance["fact_token_ids"] = fact_token_ids
             instance["fact_seg_ids"] = fact_seg_ids
 
-            instance["label_in_distrctor"] = 0
+            instance["label_in_distractor"] = 0
 
         self.instance_list = instance_list
 
