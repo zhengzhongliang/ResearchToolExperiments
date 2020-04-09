@@ -288,11 +288,11 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
 
     train_data = OpenbookDataset(train_list[:11], kb, tokenizer)
     train_dataloader = DataLoader(train_data, batch_size=batch_size,
-                                    shuffle=True, num_workers=2, collate_fn=PadCollate())
+                                    shuffle=True, num_workers=3, collate_fn=PadCollate(), drop_last=True)
 
     dev_data = OpenbookDataset(dev_list, kb, tokenizer)
     dev_dataloader = DataLoader(dev_data, batch_size=batch_size,
-                                  shuffle=False, num_workers=2, collate_fn=PadCollate())
+                                  shuffle=False, num_workers=3, collate_fn=PadCollate(), drop_last=True)
 
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = optim.Adam(bert_model.parameters(), lr=0.00001)
@@ -310,9 +310,6 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
         scores = torch.matmul(fact_output_tensor, query_output_tensor).squeeze()
 
         label = batch["label_in_distractor"].to(device)
-
-        print(scores.size())
-        print(label.size())
 
         loss = criterion(scores, label)
 
