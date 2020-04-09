@@ -309,13 +309,10 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
 
         scores = torch.matmul(fact_output_tensor, query_output_tensor).squeeze()
 
-        label = torch.tensor(batch["label_in_distractor"]).to(device)
+        label = batch["label_in_distractor"].to(device)
 
-        print("="*20)
-        print("scores:", scores)
         print(scores.size())
         print(label.size())
-        input("AAA")
 
         loss = criterion(scores, label)
 
@@ -344,7 +341,7 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
 
             scores = torch.matmul(fact_output_tensor, query_output_tensor).squeeze()
 
-            label = torch.tensor(batch["label_in_distractor"]).to(device)
+            label =batch["label_in_distractor"].to(device)
             loss = criterion(scores, label)
 
             total_loss += loss.detach().cpu().numpy()
