@@ -331,6 +331,7 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
 
     bert_model.eval()
     total_loss = 0
+    correct_count = 0
     with torch.no_grad():
         for i, batch in enumerate(dev_dataloader):
             query_output_tensor, fact_output_tensor = bert_model(batch["query_token_ids"].to(device),
@@ -339,14 +340,17 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
                                                                  batch["fact_seg_ids"].to(device))
 
 
-            scores = torch.matmul(fact_output_tensor, query_output_tensor).squeeze()
+            scores = torch.matmul(fact_output_tensor, query_output_tensor).squeeze()   # size of scores: [2,5]
 
-            label =batch["label_in_distractor"].to(device)
+            label =batch["label_in_distractor"].to(device)    # size of labels: [2]
             loss = criterion(scores, label)
 
             total_loss += loss.detach().cpu().numpy()
 
-        print("total eval loss:", total_loss)
+            _, pred_fact = torch.max(scores, dim=1)
+            correct_count += torch.sum(pred_fact==label).detach().cpu().numpy()
+
+        print("total eval loss:", total_loss, " accuracy:", correct_count/len(dev_dataloader)/batch_size)
 
     return end_time - start_time
 
