@@ -286,7 +286,7 @@ def forward_pass_epoch_dataloader(train_list, dev_list, test_list, kb, tokenizer
     print("\tuse dataloader batch size ", batch_size)
 
 
-    train_data = OpenbookDataset(train_list, kb, tokenizer)
+    train_data = OpenbookDataset(train_list[:11], kb, tokenizer)
     train_dataloader = DataLoader(train_data, batch_size=batch_size,
                                     shuffle=True, num_workers=3, collate_fn=PadCollate())
 
