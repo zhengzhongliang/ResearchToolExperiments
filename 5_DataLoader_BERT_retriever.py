@@ -188,10 +188,6 @@ class PadCollate:
             all_facts_ids[i]  = pad_tensor(fact_ids, pad=max_len_fact)
         # stack all
 
-        print("="*20)
-        print(all_facts_ids)
-        input("AAAA")
-
         # the output of this function needs to be a already batched function.
         batch_returned = {}
         batch_returned["fact_token_ids"] = torch.tensor([[101]+fact_ids+[102] for fact_ids in all_facts_ids])
