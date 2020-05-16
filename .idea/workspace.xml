@@ -13,30 +13,9 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/7_UseQA_SimpleExps2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="3" selection-start-line="3" selection-end-line="3" />
-              <folding>
-                <element signature="e#0#23#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/8_UseQA_ColabNote_1.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1215">
-              <caret line="81" column="52" selection-start-line="81" selection-start-column="52" selection-end-line="81" selection-end-column="52" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/10_UseQA_Squad_Colab.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1647">
+            <state relative-caret-position="1470">
               <caret line="113" column="4" selection-start-line="113" selection-start-column="4" selection-end-line="113" selection-end-column="4" />
               <folding>
                 <element signature="e#150#161#0" expanded="true" />
@@ -48,8 +27,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/9_SQuAD_Data_Parse.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="395">
-              <caret line="292" selection-start-line="292" selection-end-line="292" />
+            <state relative-caret-position="5295">
+              <caret line="355" column="37" selection-start-line="355" selection-start-column="37" selection-end-line="355" selection-end-column="37" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -60,7 +39,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/12_UseQA_Squad_Retrieval.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="130">
+            <state relative-caret-position="195">
               <caret line="14" selection-start-line="14" selection-end-line="14" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -72,7 +51,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/13_tfidf_SQuAD_Retrieval.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="943">
+            <state relative-caret-position="1305">
               <caret line="93" column="23" selection-start-line="93" selection-start-column="23" selection-end-line="93" selection-end-column="23" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
@@ -81,14 +60,35 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/14_hybrid_retrieval_prototype.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
+            <state relative-caret-position="1170">
               <caret line="81" selection-start-line="81" selection-end-line="81" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/5_DataLoader_BERT_retriever.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="151">
+              <caret line="358" lean-forward="true" selection-start-line="358" selection-end-line="358" />
+              <folding>
+                <element signature="e#0#25#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/15_argparse.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="15" column="12" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -101,7 +101,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/11_Convert_NQ_to_SQuAD.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
+            <state relative-caret-position="2295">
               <caret line="159" column="8" selection-start-line="159" selection-start-column="8" selection-end-line="159" selection-end-column="8" />
               <folding>
                 <element signature="e#1229#1244#0" expanded="true" />
@@ -137,6 +137,7 @@
       <find>beyonce became the first</find>
       <find>nltk</find>
       <find>train</find>
+      <find>random_negative_from_kb</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -161,14 +162,15 @@
         <option value="$PROJECT_DIR$/12_UseQA_Squad_Retrieval.py" />
         <option value="$PROJECT_DIR$/13_tfidf_SQuAD_Retrieval.py" />
         <option value="$PROJECT_DIR$/14_hybrid_retrieval_prototype.py" />
+        <option value="$PROJECT_DIR$/15_argparse.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="286" />
-    <option name="y" value="25" />
-    <option name="width" value="1019" />
-    <option name="height" value="812" />
+    <option name="x" value="194" />
+    <option name="y" value="23" />
+    <option name="width" value="1246" />
+    <option name="height" value="805" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -184,6 +186,11 @@
               <item name="ResearchToolExperiments" type="b2602c69:ProjectViewProjectNode" />
               <item name="ResearchToolExperiments" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="ResearchToolExperiments" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ResearchToolExperiments" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -194,6 +201,9 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data_generated" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
@@ -210,7 +220,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.14_hybrid_retrieval_prototype">
+  <component name="RunManager" selected="Python.15_argparse">
     <configuration name="12_UseQA_Squad_Retrieval" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ResearchToolExperiments" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -274,6 +284,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="15_argparse" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ResearchToolExperiments" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/15_argparse.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="9_SQuAD_Data_Parse" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ResearchToolExperiments" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -295,34 +326,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="covid19_estimate_simple" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="ResearchToolExperiments" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/covid19_estimate_simple.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.15_argparse" />
         <item itemvalue="Python.14_hybrid_retrieval_prototype" />
         <item itemvalue="Python.13_tfidf_SQuAD_Retrieval" />
         <item itemvalue="Python.12_UseQA_Squad_Retrieval" />
         <item itemvalue="Python.9_SQuAD_Data_Parse" />
-        <item itemvalue="Python.covid19_estimate_simple" />
       </list>
     </recent_temporary>
   </component>
@@ -349,20 +359,21 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1019" height="812" extended-state="0" />
+    <frame x="624" y="23" width="816" height="805" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.29058117" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.29056603" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32777777" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32729805" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.32911393" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286908" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32777777" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.32777777" />
+      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.32678822" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32777777" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -415,27 +426,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dev-v1.1.json">
+    <entry file="file://$PROJECT_DIR$/data_generated/dev-v1.1.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret column="845" selection-start-column="845" selection-end-column="845" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/train-v1.1.json">
+    <entry file="file://$PROJECT_DIR$/data_generated/train-v1.1.json">
       <provider selected="true" editor-type-id="LargeFileEditor">
         <state relative-caret-position="276">
           <caret column="161402" selection-start-column="161402" selection-end-column="161402" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/5_DataLoader_BERT_retriever.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4335">
-          <caret line="300" selection-start-line="300" selection-end-line="300" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -466,39 +467,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/=2.0.0rc0">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/covid19_estimate_simple.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="20" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/12_UseQA_Squad_Retrieval.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/11_Convert_NQ_to_SQuAD.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="159" column="8" selection-start-line="159" selection-start-column="8" selection-end-line="159" selection-end-column="8" />
-          <folding>
-            <element signature="e#1229#1244#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/10_UseQA_Squad_Colab.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1647">
+        <state relative-caret-position="1470">
           <caret line="113" column="4" selection-start-line="113" selection-start-column="4" selection-end-line="113" selection-end-column="4" />
           <folding>
             <element signature="e#150#161#0" expanded="true" />
@@ -508,17 +479,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/9_SQuAD_Data_Parse.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="292" selection-start-line="292" selection-end-line="292" />
+        <state relative-caret-position="5295">
+          <caret line="355" column="37" selection-start-line="355" selection-start-column="37" selection-end-line="355" selection-end-column="37" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/12_UseQA_Squad_Retrieval.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/13_tfidf_SQuAD_Retrieval.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="943">
+        <state relative-caret-position="1305">
           <caret line="93" column="23" selection-start-line="93" selection-start-column="23" selection-end-line="93" selection-end-column="23" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
@@ -528,10 +509,47 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/14_hybrid_retrieval_prototype.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
+        <state relative-caret-position="1170">
           <caret line="81" selection-start-line="81" selection-end-line="81" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/=2.0.0rc0">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/11_Convert_NQ_to_SQuAD.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2295">
+          <caret line="159" column="8" selection-start-line="159" selection-start-column="8" selection-end-line="159" selection-end-column="8" />
+          <folding>
+            <element signature="e#1229#1244#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/covid19_estimate_simple.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="20" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/15_argparse.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="12" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/5_DataLoader_BERT_retriever.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="358" lean-forward="true" selection-start-line="358" selection-end-line="358" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
